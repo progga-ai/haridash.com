@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Progga AI — Your Intelligent Learning Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com/3.4.1"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          indigo: { 950: '#0A0F1E', 900: '#0D1526', 800: '#111827', 700: '#1E293B' },
+          cyan: { 400: '#22D3EE', 300: '#67E8F9', 500: '#06B6D4' },
+          violet: { 500: '#8B5CF6', 400: '#A78BFA', 600: '#7C3AED' }
+        },
+        fontFamily: {
+          sora: ['Sora', 'sans-serif'],
+          bengali: ['Hind Siliguri', 'sans-serif']
+        },
+        animation: {
+          'float': 'float 6s ease-in-out infinite',
+          'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          'spin-slow': 'spin 20s linear infinite',
+          'gradient': 'gradientShift 8s ease infinite',
+        },
+        keyframes: {
+          float: { '0%,100%': {transform:'translateY(0px)'}, '50%': {transform:'translateY(-20px)'} },
+          gradientShift: { '0%,100%': {'background-position':'0% 50%'}, '50%': {'background-position':'100% 50%'} }
+        }
+      }
+    }
+  }
+</script>
+<style>
+  :root {
+    --bg-deep: #060C18;
+    --bg-dark: #0A1020;
+    --bg-card: rgba(255,255,255,0.04);
+    --glass: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.1);
+    --cyan: #22D3EE;
+    --violet: #8B5CF6;
+    --indigo: #1E293B;
+    --text-primary: #F1F5F9;
+    --text-muted: #94A3B8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; scroll-behavior:smooth; }
+  body { background: var(--bg-deep); color: var(--text-primary); font-family: 'Sora', sans-serif; overflow-x:hidden; }
+  ::-webkit-scrollbar { width:4px; } 
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius:2px; }
+
+  /* CANVAS PARTICLES */
+  #particles-canvas { position:absolute; inset:0; z-index:0; }
+
+  /* GLASS MORPHISM */
+  .glass { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); }
+  .glass-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; }
+  .glass-card:hover { border-color: rgba(34,211,238,0.3); box-shadow: 0 0 30px rgba(34,211,238,0.08); transition: all 0.4s ease; }
+
+  /* NEUMORPHIC BUTTONS */
+  .neu-btn { 
+    background: linear-gradient(145deg, rgba(34,211,238,0.15), rgba(139,92,246,0.15));
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.5), -2px -2px 8px rgba(255,255,255,0.03), inset 0 1px 0 rgba(255,255,255,0.1);
+    border: 1px solid rgba(34,211,238,0.3);
+    transition: all 0.2s ease;
+    position:relative; overflow:hidden;
+  }
+  .neu-btn:hover { transform: translateY(-2px); box-shadow: 6px 6px 20px rgba(0,0,0,0.6), -2px -2px 10px rgba(255,255,255,0.05), 0 0 30px rgba(34,211,238,0.3); border-color: rgba(34,211,238,0.6); }
+  .neu-btn:active { transform: translateY(1px) scale(0.98); box-shadow: 2px 2px 8px rgba(0,0,0,0.5), inset 2px 2px 6px rgba(0,0,0,0.3); }
+  .neu-btn::after { content:''; position:absolute; inset:0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%); opacity:0; transition:opacity 0.3s; }
+  .neu-btn:hover::after { opacity:1; }
+
+  /* GLOW EFFECTS */
+  .glow-cyan { box-shadow: 0 0 20px rgba(34,211,238,0.4), 0 0 60px rgba(34,211,238,0.1); }
+  .glow-violet { box-shadow: 0 0 20px rgba(139,92,246,0.4), 0 0 60px rgba(139,92,246,0.1); }
+  .text-glow-cyan { text-shadow: 0 0 20px rgba(34,211,238,0.5); }
+  .text-glow-violet { text-shadow: 0 0 20px rgba(139,92,246,0.5); }
+
+  /* GRADIENT TEXT */
+  .grad-text { background: linear-gradient(135deg, #22D3EE 0%, #8B5CF6 50%, #22D3EE 100%); background-size:200%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation: gradientShift 4s ease infinite; }
+  @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+  /* NAVBAR */
+  #navbar { transition: all 0.4s ease; }
+  #navbar.scrolled { background: rgba(6,12,24,0.95); backdrop-filter: blur(30px); box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+
+  /* FLOATING LABEL INPUT */
+  .input-group { position:relative; }
+  .input-group input, .input-group textarea { 
+    width:100%; padding: 18px 16px 8px; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1); border-radius:12px; color:#F1F5F9;
+    font-family:'Sora',sans-serif; font-size:14px; outline:none; transition:all 0.3s;
+  }
+  .input-group input:focus, .input-group textarea:focus { border-color: var(--cyan); box-shadow: 0 0 20px rgba(34,211,238,0.2); }
+  .input-group label { 
+    position:absolute; left:16px; top:14px; font-size:14px; color: var(--text-muted);
+    transition: all 0.3s ease; pointer-events:none;
+  }
+  .input-group input:focus ~ label, .input-group input:not(:placeholder-shown) ~ label,
+  .input-group textarea:focus ~ label, .input-group textarea:not(:placeholder-shown) ~ label {
+    top:6px; font-size:10px; color: var(--cyan); letter-spacing:0.05em; text-transform:uppercase;
+  }
+
+  /* PAGE SECTIONS */
+  .page-section { display:none; }
+  .page-section.active { display:block; }
+
+  /* PHONE MOCKUP */
+  .phone-mockup { 
+    width:220px; height:440px;
+    background: linear-gradient(160deg, rgba(30,41,59,0.9), rgba(15,23,42,0.95));
+    border-radius: 36px; border: 2px solid rgba(34,211,238,0.3);
+    box-shadow: 0 0 60px rgba(34,211,238,0.15), 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+    position:relative; overflow:hidden;
+    animation: float 6s ease-in-out infinite;
+  }
+  .phone-notch { width:80px; height:22px; background:#060C18; border-radius:0 0 14px 14px; margin:0 auto 12px; }
+
+  /* STEP CONNECTOR */
+  .step-line { width:2px; height:60px; background: linear-gradient(180deg, var(--cyan), var(--violet)); margin:0 auto; opacity:0.4; }
+
+  /* PRICING TABLE */
+  .pricing-card { transition: all 0.4s ease; }
+  .pricing-card:hover { transform: translateY(-8px); }
+  .pricing-popular { border: 1px solid rgba(34,211,238,0.5) !important; box-shadow: 0 0 40px rgba(34,211,238,0.15) !important; }
+
+  /* FAQ ACCORDION */
+  .faq-item .faq-answer { max-height:0; overflow:hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+  .faq-item.open .faq-answer { max-height:200px; }
+  .faq-item .faq-icon { transition: transform 0.3s ease; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+  /* ANIMATED GRID BG */
+  .grid-bg { background-image: linear-gradient(rgba(34,211,238,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.03) 1px, transparent 1px); background-size: 60px 60px; }
+
+  /* ORBIT RINGS */
+  .orbit-ring { border: 1px solid rgba(34,211,238,0.1); border-radius:50%; position:absolute; animation: spin 15s linear infinite; }
+
+  /* BADGE */
+  .badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:100px; background:rgba(34,211,238,0.1); border:1px solid rgba(34,211,238,0.25); font-size:12px; color:var(--cyan); letter-spacing:0.05em; }
+
+  /* DIVIDER */
+  .grad-divider { height:1px; background: linear-gradient(90deg, transparent, rgba(34,211,238,0.4), transparent); }
+
+  /* HAMBURGER */
+  .hamburger span { display:block; width:22px; height:2px; background:var(--text-primary); border-radius:2px; transition:all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(3px,3px); }
+  .hamburger.open span:nth-child(2) { opacity:0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(3px,-3px); }
+
+  /* NAV MOBILE */
+  #mobile-menu { max-height:0; overflow:hidden; transition: max-height 0.4s ease; }
+  #mobile-menu.open { max-height:400px; }
+
+  /* SECTION FADE */
+  .fade-up { opacity:0; transform:translateY(30px); transition: all 0.7s ease; }
+  .fade-up.visible { opacity:1; transform:translateY(0); }
+
+  /* SUBJECT CARD */
+  .subject-card { position:relative; overflow:hidden; }
+  .subject-card::before { content:''; position:absolute; inset:0; background: var(--grad); opacity:0; transition:opacity 0.4s; border-radius:20px; }
+  .subject-card:hover::before { opacity:0.08; }
+
+  /* PRICING TOGGLE */
+  .pricing-toggle-btn { color: rgba(255,255,255,0.5); cursor:pointer; }
+  .pricing-toggle-btn.active-toggle { background: linear-gradient(135deg,rgba(34,211,238,0.2),rgba(139,92,246,0.2)); color: #22D3EE; box-shadow: 0 0 20px rgba(34,211,238,0.15); border: 1px solid rgba(34,211,238,0.3); }
+  .pricing-plans { transition: opacity 0.3s ease; }
+  .pricing-plans.hidden { display:none; }
+  .pricing-best { animation: bestGlow 3s ease-in-out infinite; }
+  @keyframes bestGlow { 0%,100%{box-shadow:0 0 40px rgba(34,211,238,0.15),0 0 80px rgba(139,92,246,0.08),inset 0 1px 0 rgba(255,255,255,0.08)} 50%{box-shadow:0 0 60px rgba(34,211,238,0.25),0 0 100px rgba(139,92,246,0.15),inset 0 1px 0 rgba(255,255,255,0.1)} }
+
+  @keyframes scrollBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+  .scroll-indicator { animation: scrollBounce 2s ease-in-out infinite; }
+
+  /* FEATURE TAG */
+  .feature-tag { background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.2); color:#A78BFA; padding:4px 12px; border-radius:100px; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; }
+
+  /* STAT */
+  .stat-num { font-size:2.5rem; font-weight:800; background: linear-gradient(135deg, #22D3EE, #8B5CF6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+</style>
+</head>
+<body class="grid-bg">
+
+<!-- ═══════════════════════════════════════════════
+     STICKY NAVBAR
+═══════════════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 w-full z-50 py-4 px-6">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <!-- Logo -->
+    <a href="#" onclick="showPage('home')" class="flex items-center gap-3 cursor-pointer">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#22D3EE,#8B5CF6)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <span class="font-sora font-800 text-lg tracking-tight">
+        <span class="grad-text font-extrabold">Progga</span><span class="text-white/90 font-semibold"> AI</span>
+      </span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <div class="hidden md:flex items-center gap-1">
+      <button onclick="showPage('home')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all">Home</button>
+      <button onclick="showPage('features')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all">AI Features</button>
+      <button onclick="showPage('about')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all">About</button>
+      <button onclick="showPage('pricing')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all">Pricing</button>
+      <button onclick="showPage('faq')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all">FAQ</button>
+      <button onclick="showPage('contact')" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all">Contact</button>
+    </div>
+
+    <!-- CTA + Hamburger -->
+    <div class="flex items-center gap-3">
+      <button class="neu-btn hidden md:flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-cyan-400 glow-cyan">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+        </svg>
+        Download App
+      </button>
+      <button id="hamburger" class="hamburger md:hidden flex flex-col gap-1.5 p-2" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden glass mt-3 rounded-2xl mx-0 overflow-hidden">
+    <div class="flex flex-col p-4 gap-1">
+      <button onclick="showPage('home');toggleMenu()" class="text-left px-4 py-3 text-sm text-white/80 hover:text-cyan-400 hover:bg-white/5 rounded-xl transition-all">Home</button>
+      <button onclick="showPage('features');toggleMenu()" class="text-left px-4 py-3 text-sm text-white/80 hover:text-cyan-400 hover:bg-white/5 rounded-xl transition-all">AI Features</button>
+      <button onclick="showPage('about');toggleMenu()" class="text-left px-4 py-3 text-sm text-white/80 hover:text-cyan-400 hover:bg-white/5 rounded-xl transition-all">About</button>
+      <button onclick="showPage('pricing');toggleMenu()" class="text-left px-4 py-3 text-sm text-white/80 hover:text-cyan-400 hover:bg-white/5 rounded-xl transition-all">Pricing</button>
+      <button onclick="showPage('faq');toggleMenu()" class="text-left px-4 py-3 text-sm text-white/80 hover:text-cyan-400 hover:bg-white/5 rounded-xl transition-all">FAQ</button>
+      <button onclick="showPage('contact');toggleMenu()" class="text-left px-4 py-3 text-sm text-white/80 hover:text-cyan-400 hover:bg-white/5 rounded-xl transition-all">Contact</button>
+      <button class="mt-2 neu-btn flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-cyan-400">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download App
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE: HOME
+═══════════════════════════════════════════════ -->
+<section id="page-home" class="page-section active">
+
+  <!-- HERO -->
+  <div class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Background orbs -->
+    <div class="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl" style="background:radial-gradient(circle,#22D3EE,transparent)"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl" style="background:radial-gradient(circle,#8B5CF6,transparent)"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
+      <!-- Left: Text -->
+      <div class="space-y-8">
+        <div class="badge fade-up">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse inline-block"></span>
+          Bangladesh's #1 AI Learning App
+        </div>
+
+        <h1 class="fade-up text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight tracking-tight">
+          শেখার পথে<br/>
+          <span class="grad-text">তোমার AI</span><br/>
+          <span class="text-white">সঙ্গী</span>
+        </h1>
+
+        <p class="fade-up text-lg text-white/60 leading-relaxed max-w-lg font-bengali">
+          যেকোনো প্রশ্নের উত্তর, যেকোনো সময়। Progga AI তোমার পাশে থেকে পদার্থবিজ্ঞান, গণিত ও ইংরেজিতে তোমাকে এগিয়ে নিয়ে যাবে।
+        </p>
+
+        <p class="fade-up text-base text-white/50 leading-relaxed max-w-lg">
+          Powered by advanced AI models — your personal tutor available 24/7, speaking your language, understanding your curriculum.
+        </p>
+
+        <div class="fade-up flex flex-wrap gap-4">
+          <button class="neu-btn flex items-center gap-3 px-7 py-4 rounded-2xl font-semibold text-cyan-400 glow-cyan text-base">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Free
+          </button>
+          <button onclick="showPage('features')" class="flex items-center gap-3 px-7 py-4 rounded-2xl font-semibold text-white/70 hover:text-white border border-white/10 hover:border-white/20 transition-all text-base">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg>
+            Explore Features
+          </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="fade-up flex gap-10 pt-4">
+          <div>
+            <div class="stat-num">10K+</div>
+            <div class="text-white/50 text-sm mt-1">Students</div>
+          </div>
+          <div class="w-px bg-white/10"></div>
+          <div>
+            <div class="stat-num">98%</div>
+            <div class="text-white/50 text-sm mt-1">Satisfaction</div>
+          </div>
+          <div class="w-px bg-white/10"></div>
+          <div>
+            <div class="stat-num">24/7</div>
+            <div class="text-white/50 text-sm mt-1">Available</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Phone Mockup -->
+      <div class="relative flex justify-center items-center fade-up">
+        <!-- Orbit rings -->
+        <div class="orbit-ring" style="width:340px;height:340px;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+        <div class="orbit-ring" style="width:440px;height:440px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:25s;animation-direction:reverse;border-color:rgba(139,92,246,0.1);"></div>
+
+        <!-- Floating feature pills -->
+        <div class="absolute left-0 top-1/4 glass-card px-4 py-3 text-xs font-medium text-cyan-300 flex items-center gap-2 animate-float" style="animation-delay:-1s">
+          <span class="text-lg">🧠</span> AI Doubt Solver
+        </div>
+        <div class="absolute right-0 top-1/3 glass-card px-4 py-3 text-xs font-medium text-violet-300 flex items-center gap-2 animate-float" style="animation-delay:-2s">
+          <span class="text-lg">🎤</span> Voice Learning
+        </div>
+        <div class="absolute left-4 bottom-1/4 glass-card px-4 py-3 text-xs font-medium text-emerald-300 flex items-center gap-2 animate-float" style="animation-delay:-3s">
+          <span class="text-lg">🗺️</span> Study Roadmap
+        </div>
+
+        <!-- Phone -->
+        <div class="phone-mockup">
+          <div class="p-4">
+            <div class="phone-notch"></div>
+            <!-- Screen content -->
+            <div class="space-y-3 px-1">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#22D3EE,#8B5CF6)">
+                  <span class="text-xs font-bold text-white">P</span>
+                </div>
+                <div>
+                  <div class="text-xs font-semibold text-white">Progga AI</div>
+                  <div class="text-xs text-cyan-400">● Online</div>
+                </div>
+              </div>
+
+              <!-- Chat bubbles -->
+              <div class="flex justify-end">
+                <div class="bg-white/10 rounded-2xl rounded-tr-sm px-3 py-2 text-xs text-white/80 max-w-[140px] font-bengali">
+                  নিউটনের তৃতীয় সূত্র বুঝিয়ে দাও
+                </div>
+              </div>
+
+              <div class="flex justify-start">
+                <div class="rounded-2xl rounded-tl-sm px-3 py-2 text-xs text-white max-w-[155px]" style="background:linear-gradient(135deg,rgba(34,211,238,0.2),rgba(139,92,246,0.2));border:1px solid rgba(34,211,238,0.2)">
+                  প্রতিটি ক্রিয়ার সমান ও বিপরীত প্রতিক্রিয়া আছে! 🚀
+                </div>
+              </div>
+
+              <div class="glass-card px-3 py-3 mt-2">
+                <div class="text-xs text-cyan-400 font-semibold mb-1.5">📚 আজকের পরিকল্পনা</div>
+                <div class="space-y-1.5">
+                  <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                    <span class="text-xs text-white/70">Physics — Chapter 4</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-violet-400"></div>
+                    <span class="text-xs text-white/70">Math Practice Set</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-white/30"></div>
+                    <span class="text-xs text-white/40">English Grammar</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Input bar -->
+              <div class="mt-4 flex items-center gap-2 glass rounded-xl px-3 py-2">
+                <span class="text-xs text-white/40 flex-1 font-bengali">প্রশ্ন করো...</span>
+                <div class="w-6 h-6 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#22D3EE,#8B5CF6)">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Home indicator -->
+          <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-16 h-1 bg-white/20 rounded-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 scroll-indicator">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+
+  <div class="grad-divider my-0"></div>
+
+  <!-- HOW IT WORKS -->
+  <div class="py-24 px-6 max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="badge mx-auto mb-4">Simple 3-Step Process</div>
+      <h2 class="text-4xl md:text-5xl font-extrabold fade-up">How It <span class="grad-text">Works</span></h2>
+      <p class="text-white/50 mt-4 max-w-xl mx-auto">From download to learning — get started in under 2 minutes.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8 relative">
+      <!-- Connector line -->
+      <div class="hidden md:block absolute top-1/4 left-1/3 right-1/3 h-px" style="background:linear-gradient(90deg,transparent,rgba(34,211,238,0.3),rgba(139,92,246,0.3),transparent)"></div>
+
+      <!-- Step 1 -->
+      <div class="glass-card p-8 text-center fade-up">
+        <div class="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center text-2xl" style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2)">
+          📲
+        </div>
+        <div class="feature-tag mb-3">Step 01</div>
+        <h3 class="text-xl font-bold mt-3 mb-3 text-white">Download & Sign Up</h3>
+        <p class="text-white/50 text-sm leading-relaxed">Install Progga AI from Google Play Store. Register with your phone number using secure Firebase OTP verification.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="glass-card p-8 text-center fade-up" style="transition-delay:0.1s">
+        <div class="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center text-2xl" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2)">
+          🎯
+        </div>
+        <div class="feature-tag mb-3" style="background:rgba(139,92,246,0.1);border-color:rgba(139,92,246,0.2);color:#A78BFA">Step 02</div>
+        <h3 class="text-xl font-bold mt-3 mb-3 text-white">Choose Your Subject</h3>
+        <p class="text-white/50 text-sm leading-relaxed">Select Physics, Math, or English. Progga AI creates a personalized learning roadmap based on your class and goals.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="glass-card p-8 text-center fade-up" style="transition-delay:0.2s">
+        <div class="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center text-2xl" style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2)">
+          🚀
+        </div>
+        <div class="feature-tag mb-3">Step 03</div>
+        <h3 class="text-xl font-bold mt-3 mb-3 text-white">Ask, Learn & Grow</h3>
+        <p class="text-white/50 text-sm leading-relaxed">Type or speak your questions in Bengali or English. Get instant, curriculum-aligned answers with step-by-step explanations.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grad-divider"></div>
+
+  <!-- FEATURE HIGHLIGHTS -->
+  <div class="py-24 px-6 max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="badge mx-auto mb-4">Core Capabilities</div>
+      <h2 class="text-4xl md:text-5xl font-extrabold fade-up">Built for <span class="grad-text">Bangladeshi</span> Students</h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="glass-card p-6 fade-up">
+        <div class="text-3xl mb-4">🤖</div>
+        <h3 class="text-lg font-bold mb-2">24/7 AI Doubt Solver</h3>
+        <p class="text-white/50 text-sm leading-relaxed">Never get stuck. Ask any question at 3am before your exam — Progga AI is always awake.</p>
+      </div>
+      <div class="glass-card p-6 fade-up" style="transition-delay:0.1s">
+        <div class="text-3xl mb-4">🗺️</div>
+        <h3 class="text-lg font-bold mb-2">Personalized Roadmap</h3>
+        <p class="text-white/50 text-sm leading-relaxed">AI-curated study plans that adapt to your pace, strengths, and upcoming exams.</p>
+      </div>
+      <div class="glass-card p-6 fade-up" style="transition-delay:0.2s">
+        <div class="text-3xl mb-4">🎤</div>
+        <h3 class="text-lg font-bold mb-2">Voice Interaction</h3>
+        <p class="text-white/50 text-sm leading-relaxed">Speak your questions in Bengali — Progga AI understands your voice and responds instantly.</p>
+      </div>
+      <div class="glass-card p-6 fade-up" style="transition-delay:0.3s">
+        <div class="text-3xl mb-4">🔐</div>
+        <h3 class="text-lg font-bold mb-2">Safe & Secure</h3>
+        <p class="text-white/50 text-sm leading-relaxed">Firebase Phone OTP authentication ensures your data stays private and protected always.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE: AI FEATURES
+═══════════════════════════════════════════════ -->
+<section id="page-features" class="page-section">
+  <div class="pt-28 pb-16 px-6 max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-20">
+      <div class="badge mx-auto mb-4">AI-Powered Education</div>
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-6">Smart Subject <span class="grad-text">Agents</span></h1>
+      <p class="text-white/50 text-lg max-w-2xl mx-auto">Three dedicated AI experts, each mastering their domain — trained specifically on the Bangladesh national curriculum.</p>
+    </div>
+
+    <!-- PHYSICS AGENT -->
+    <div class="glass-card p-8 md:p-12 mb-8 subject-card" style="--grad:linear-gradient(135deg,#22D3EE,#0EA5E9)">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl" style="background:rgba(34,211,238,0.15);border:1px solid rgba(34,211,238,0.3)">⚛️</div>
+            <div>
+              <div class="feature-tag mb-1">AI Subject Agent</div>
+              <h2 class="text-2xl font-bold text-white">Physics Expert</h2>
+            </div>
+          </div>
+          <p class="text-white/60 mb-6 leading-relaxed">From Newton's Laws to Quantum Mechanics — your Physics AI Agent breaks down complex concepts into simple, visual explanations tailored to HSC and SSC level.</p>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3"><span class="text-cyan-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Step-by-step problem solving with formulas shown in Bengali</span></li>
+            <li class="flex items-start gap-3"><span class="text-cyan-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Diagram generation for force, motion, wave, and optics</span></li>
+            <li class="flex items-start gap-3"><span class="text-cyan-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Past exam question analysis with pattern recognition</span></li>
+            <li class="flex items-start gap-3"><span class="text-cyan-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Chapter-wise concept mapping for SSC & HSC board exams</span></li>
+          </ul>
+        </div>
+        <div class="glass-card p-6 relative">
+          <div class="text-xs text-cyan-400 font-semibold mb-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            Physics AI — Live Demo
+          </div>
+          <div class="space-y-3">
+            <div class="flex justify-end">
+              <div class="bg-white/10 rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm text-white/80 max-w-[80%] font-bengali">আলোর প্রতিসরণ কী?</div>
+            </div>
+            <div class="flex justify-start">
+              <div class="rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-white max-w-[85%]" style="background:linear-gradient(135deg,rgba(34,211,238,0.15),rgba(34,211,238,0.05));border:1px solid rgba(34,211,238,0.2)">
+                আলো এক মাধ্যম থেকে অন্য মাধ্যমে প্রবেশের সময় তার দিক পরিবর্তন করে — এটাই প্রতিসরণ! 🌊
+                <br/><br/>
+                <span class="text-cyan-300 font-mono text-xs">Snell's Law: n₁sin θ₁ = n₂sin θ₂</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATH AGENT -->
+    <div class="glass-card p-8 md:p-12 mb-8 subject-card" style="--grad:linear-gradient(135deg,#8B5CF6,#6D28D9)">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div class="order-2 md:order-1 glass-card p-6">
+          <div class="text-xs text-violet-400 font-semibold mb-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-violet-400 animate-pulse"></span>
+            Math AI — Problem Solver
+          </div>
+          <div class="space-y-3">
+            <div class="flex justify-end">
+              <div class="bg-white/10 rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm text-white/80 font-bengali">x² + 5x + 6 = 0 সমাধান করো</div>
+            </div>
+            <div class="flex justify-start">
+              <div class="rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-white max-w-[90%]" style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(139,92,246,0.05));border:1px solid rgba(139,92,246,0.2)">
+                <span class="text-violet-300 font-semibold">ধাপ ১:</span> উৎপাদকে বিশ্লেষণ করি<br/>
+                <span class="font-mono text-xs text-violet-300">(x+2)(x+3) = 0</span><br/><br/>
+                <span class="text-violet-300 font-semibold">সমাধান:</span> x = -2 অথবা x = -3 ✅
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="order-1 md:order-2">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3)">📐</div>
+            <div>
+              <div class="feature-tag mb-1" style="background:rgba(139,92,246,0.1);border-color:rgba(139,92,246,0.2);color:#A78BFA">AI Subject Agent</div>
+              <h2 class="text-2xl font-bold text-white">Mathematics Expert</h2>
+            </div>
+          </div>
+          <p class="text-white/60 mb-6 leading-relaxed">Algebra, Geometry, Calculus, Statistics — your Math AI shows every working step in Bengali, so you understand the <em>why</em>, not just the answer.</p>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3"><span class="text-violet-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Complete step-by-step workings in Bengali language</span></li>
+            <li class="flex items-start gap-3"><span class="text-violet-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Graph visualization for functions and equations</span></li>
+            <li class="flex items-start gap-3"><span class="text-violet-400 mt-0.5">✦</span><span class="text-white/70 text-sm">MCQ practice with instant scoring and hints</span></li>
+            <li class="flex items-start gap-3"><span class="text-violet-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Geometry and trigonometry with labeled diagrams</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGLISH AGENT -->
+    <div class="glass-card p-8 md:p-12 mb-16 subject-card" style="--grad:linear-gradient(135deg,#10B981,#059669)">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3)">📝</div>
+            <div>
+              <div class="feature-tag mb-1" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.2);color:#6EE7B7">AI Subject Agent</div>
+              <h2 class="text-2xl font-bold text-white">English Expert</h2>
+            </div>
+          </div>
+          <p class="text-white/60 mb-6 leading-relaxed">From grammar rules to essay writing — your English AI helps you master the language with Bengali-medium explanations and real-world examples.</p>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3"><span class="text-emerald-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Grammar correction with Bengali explanations</span></li>
+            <li class="flex items-start gap-3"><span class="text-emerald-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Essay and paragraph writing assistance</span></li>
+            <li class="flex items-start gap-3"><span class="text-emerald-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Vocabulary building with contextual examples</span></li>
+            <li class="flex items-start gap-3"><span class="text-emerald-400 mt-0.5">✦</span><span class="text-white/70 text-sm">Comprehension passage analysis and answering tips</span></li>
+          </ul>
+        </div>
+        <div class="glass-card p-6">
+          <div class="text-xs text-emerald-400 font-semibold mb-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            English AI — Grammar Check
+          </div>
+          <div class="space-y-3">
+            <div class="flex justify-end">
+              <div class="bg-white/10 rounded-2xl rounded-tr-sm px-4 py-2.5 text-sm text-white/80">"She go to school every day" — সঠিক কি?</div>
+            </div>
+            <div class="flex justify-start">
+              <div class="rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm text-white max-w-[90%]" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2)">
+                ❌ ভুল! সঠিক হবে: <span class="text-emerald-300 font-semibold">"She goes to school"</span><br/><br/>
+                <span class="text-white/60 text-xs">He/She/It এর সাথে goes ব্যবহার হয় — Present Simple tense! 📚</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VOICE SECTION -->
+    <div class="grid md:grid-cols-2 gap-8 mb-8">
+      <div class="glass-card p-8">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style="background:linear-gradient(135deg,rgba(34,211,238,0.2),rgba(139,92,246,0.2));border:1px solid rgba(34,211,238,0.3)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#micGrad)" stroke-width="2">
+            <defs><linearGradient id="micGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#8B5CF6"/></linearGradient></defs>
+            <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold mb-4">Voice <span class="grad-text">Interactivity</span></h2>
+        <p class="text-white/60 mb-6 leading-relaxed">No need to type! Simply tap the microphone and ask your question in Bengali or English. Progga AI listens, understands, and responds with full explanations — just like a real tutor sitting beside you.</p>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4 glass rounded-xl p-4">
+            <span class="text-2xl">🎙️</span>
+            <div><div class="font-semibold text-sm">Tap & Speak</div><div class="text-xs text-white/50 mt-0.5">Bengali & English supported</div></div>
+          </div>
+          <div class="flex items-center gap-4 glass rounded-xl p-4">
+            <span class="text-2xl">🔊</span>
+            <div><div class="font-semibold text-sm">Listen to Answers</div><div class="text-xs text-white/50 mt-0.5">AI reads out explanations for you</div></div>
+          </div>
+          <div class="flex items-center gap-4 glass rounded-xl p-4">
+            <span class="text-2xl">🧩</span>
+            <div><div class="font-semibold text-sm">Smart Context Memory</div><div class="text-xs text-white/50 mt-0.5">Follow-up questions understood naturally</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECURITY SECTION -->
+      <div class="glass-card p-8" style="border-color:rgba(34,211,238,0.15)">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2)">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9,12 11,14 15,10"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold mb-4">Safe &amp; <span class="text-cyan-400">Secure</span></h2>
+        <p class="text-white/60 mb-6 leading-relaxed">Every student's data is protected with enterprise-grade security. We use Firebase Phone OTP Authentication — the same system trusted by global apps — so your account is always yours alone.</p>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4 glass rounded-xl p-4">
+            <span class="text-2xl">📱</span>
+            <div><div class="font-semibold text-sm">Phone OTP Verification</div><div class="text-xs text-white/50 mt-0.5">Powered by Firebase Authentication</div></div>
+          </div>
+          <div class="flex items-center gap-4 glass rounded-xl p-4">
+            <span class="text-2xl">🔒</span>
+            <div><div class="font-semibold text-sm">End-to-End Data Encryption</div><div class="text-xs text-white/50 mt-0.5">Your chats are never stored publicly</div></div>
+          </div>
+          <div class="flex items-center gap-4 glass rounded-xl p-4">
+            <span class="text-2xl">🛡️</span>
+            <div><div class="font-semibold text-sm">Child-Safe Platform</div><div class="text-xs text-white/50 mt-0.5">Designed with student privacy first</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE: ABOUT
+═══════════════════════════════════════════════ -->
+<section id="page-about" class="page-section">
+  <div class="pt-28 pb-24 px-6 max-w-7xl mx-auto">
+    <!-- Hero -->
+    <div class="text-center mb-20">
+      <div class="badge mx-auto mb-4">Our Story</div>
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-6">The Vision Behind <span class="grad-text">Progga AI</span></h1>
+      <p class="text-white/50 text-lg max-w-3xl mx-auto leading-relaxed">
+        Every student in Bangladesh deserves access to a world-class tutor — not just those in Dhaka, not just those who can afford coaching. <strong class="text-white">Every student. Everywhere.</strong>
+      </p>
+    </div>
+
+    <!-- Story section -->
+    <div class="grid lg:grid-cols-2 gap-16 items-center mb-20">
+      <div class="space-y-6">
+        <h2 class="text-3xl font-bold">শিক্ষার সমান সুযোগ <span class="grad-text">সবার জন্য</span></h2>
+        <p class="text-white/60 leading-relaxed font-bengali">
+          বাংলাদেশের লক্ষ লক্ষ শিক্ষার্থী প্রতিদিন একটাই সমস্যার মুখে পড়ে — ভালো গাইডের অভাব। গ্রামে, মফস্বলে, এমনকি শহরেও অনেক মেধাবী ছাত্র-ছাত্রী শুধুমাত্র সঠিক সাহায্যের অভাবে পিছিয়ে পড়ে।
+        </p>
+        <p class="text-white/60 leading-relaxed font-bengali">
+          Progga AI তৈরি হয়েছে সেই বাধাটা ভেঙে দিতে। এখন তোমার হাতের স্মার্টফোনেই আছে একজন বিশেষজ্ঞ শিক্ষক — যে কখনো ক্লান্ত হয় না, কখনো বিরক্ত হয় না, এবং সবসময় তোমার পাশে থাকে।
+        </p>
+        <p class="text-white/60 leading-relaxed">
+          We believe that artificial intelligence, when thoughtfully designed for a specific community, can become the greatest equalizer in education. Progga AI is our contribution to Bangladesh's future.
+        </p>
+
+        <div class="grid grid-cols-2 gap-4 pt-4">
+          <div class="glass-card p-5 text-center">
+            <div class="stat-num text-2xl">64+</div>
+            <div class="text-white/50 text-xs mt-1">Districts Reached</div>
+          </div>
+          <div class="glass-card p-5 text-center">
+            <div class="stat-num text-2xl">3</div>
+            <div class="text-white/50 text-xs mt-1">Core Subjects</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Mission cards -->
+        <div class="glass-card p-6 flex gap-5 items-start">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2)">🎯</div>
+          <div>
+            <h3 class="font-bold mb-2">Our Mission</h3>
+            <p class="text-white/55 text-sm leading-relaxed">To democratize quality education across Bangladesh by putting an AI tutor in every student's pocket — completely accessible, deeply personalized.</p>
+          </div>
+        </div>
+        <div class="glass-card p-6 flex gap-5 items-start">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2)">🌟</div>
+          <div>
+            <h3 class="font-bold mb-2">Our Vision</h3>
+            <p class="text-white/55 text-sm leading-relaxed">A Bangladesh where geography or income never determines the quality of a student's education. Where every child can compete globally.</p>
+          </div>
+        </div>
+        <div class="glass-card p-6 flex gap-5 items-start">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2)">💡</div>
+          <div>
+            <h3 class="font-bold mb-2">Our Values</h3>
+            <p class="text-white/55 text-sm leading-relaxed">Accuracy first. Privacy always. Built with empathy for the Bengali-medium learner, not as an afterthought but from the very beginning.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grad-divider mb-20"></div>
+
+    <!-- Developer & Company -->
+    <div class="text-center mb-12">
+      <div class="badge mx-auto mb-4">The Team</div>
+      <h2 class="text-3xl font-bold">The Mind Behind <span class="grad-text">Progga AI</span></h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8">
+      <!-- Developer card -->
+      <div class="glass-card p-8 text-center" style="border-color:rgba(34,211,238,0.2)">
+        <div class="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,rgba(34,211,238,0.2),rgba(139,92,246,0.2));border:2px solid rgba(34,211,238,0.3)">
+          👨‍💻
+        </div>
+        <h3 class="text-xl font-bold mb-1">Haridash Bachar</h3>
+        <div class="text-cyan-400 text-sm mb-4">Founder & Lead Developer</div>
+        <p class="text-white/55 text-sm leading-relaxed mb-6">
+          Haridash is the visionary technologist behind Progga AI. Deeply passionate about the intersection of AI and education, he built Progga AI to solve the real problems he saw Bangladeshi students face every day.
+        </p>
+        <div class="flex justify-center gap-3">
+          <div class="glass rounded-lg px-3 py-1.5 text-xs text-white/60">AI/ML</div>
+          <div class="glass rounded-lg px-3 py-1.5 text-xs text-white/60">Android Dev</div>
+          <div class="glass rounded-lg px-3 py-1.5 text-xs text-white/60">Firebase</div>
+          <div class="glass rounded-lg px-3 py-1.5 text-xs text-white/60">EdTech</div>
+        </div>
+      </div>
+
+      <!-- Brand values card -->
+      <div class="glass-card p-8">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl" style="background:linear-gradient(135deg,rgba(34,211,238,0.15),rgba(139,92,246,0.15));border:1px solid rgba(34,211,238,0.25)">🎓</div>
+          <div>
+            <h3 class="text-xl font-bold">Progga AI</h3>
+            <div class="text-cyan-400 text-sm">Bangladesh's Intelligent Learning Platform</div>
+          </div>
+        </div>
+        <p class="text-white/55 text-sm leading-relaxed mb-6">
+          Progga AI is an independent, purpose-built EdTech brand focused entirely on one mission — making quality AI-powered education accessible to every student in Bangladesh, from Class 6 through university entrance.
+        </p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <span class="text-cyan-400">→</span>
+            <span class="text-white/70 text-sm">100% focused on Bangladeshi curriculum & students</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-cyan-400">→</span>
+            <span class="text-white/70 text-sm">Bengali-first AI experience, built from the ground up</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-cyan-400">→</span>
+            <span class="text-white/70 text-sm">Independent brand — no affiliations, full transparency</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE: PRICING
+═══════════════════════════════════════════════ -->
+<section id="page-pricing" class="page-section">
+  <div class="pt-28 pb-24 px-6 max-w-7xl mx-auto">
+
+    <div class="text-center mb-10">
+      <div class="badge mx-auto mb-4">Transparent Pricing</div>
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-6">Choose Your <span class="grad-text">Plan</span></h1>
+      <p class="text-white/50 text-lg">বেছে নাও তোমার পথ — Student নাকি Teacher?</p>
+    </div>
+
+    <!-- TOGGLE SWITCH -->
+    <div class="flex justify-center mb-14">
+      <div class="glass rounded-2xl p-1.5 flex items-center gap-1 relative" id="plan-toggle-wrap">
+        <button id="toggle-student" onclick="setPricingMode('student')" class="pricing-toggle-btn active-toggle px-8 py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center gap-2">
+          <span>🎒</span> Student
+        </button>
+        <button id="toggle-teacher" onclick="setPricingMode('teacher')" class="pricing-toggle-btn px-8 py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center gap-2">
+          <span>👩‍🏫</span> Teacher
+        </button>
+      </div>
+    </div>
+
+    <!-- STUDENT PLANS -->
+    <div id="student-plans" class="pricing-plans">
+      <div class="text-center mb-8">
+        <p class="text-white/50 text-sm">৩ টি বিষয়ে AI টিউটর · ছবি তুলে সমাধান · স্টাডি গ্রুপ চ্যাট · টিচার ব্রডকাস্ট</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+
+        <!-- 1 Month -->
+        <div class="glass-card p-6 pricing-card flex flex-col">
+          <div class="text-xs font-bold text-white/50 uppercase tracking-widest mb-3">১ মাস</div>
+          <div class="flex items-end gap-1 mb-1">
+            <div class="text-4xl font-extrabold text-white">৳149</div>
+          </div>
+          <div class="text-white/40 text-xs mb-4">শিখা শুরু করো</div>
+          <div class="grad-divider mb-5"></div>
+          <ul class="space-y-2.5 mb-6 flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-cyan-400 font-bold mt-0.5">✓</span> AI ভয়েস টিউটর — ৩০০ মিনিট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-cyan-400 font-bold mt-0.5">✓</span> ছবি তুলে সমাধান</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-cyan-400 font-bold mt-0.5">✓</span> স্টাডি গ্রুপ চ্যাট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-cyan-400 font-bold mt-0.5">✓</span> টিচার ব্রডকাস্ট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-cyan-400 font-bold mt-0.5">✓</span> Unlimited AI প্রশ্ন</li>
+          </ul>
+          <button class="w-full py-3 rounded-xl font-semibold text-xs text-white/70 border border-white/10 hover:border-cyan-400/30 hover:text-cyan-300 transition-all">
+            শুরু করো →
+          </button>
+        </div>
+
+        <!-- 3 Months -->
+        <div class="glass-card p-6 pricing-card flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-xs font-bold text-white/50 uppercase tracking-widest">৩ মাস</div>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(34,211,238,0.15);color:#22D3EE">১১% ছাড়</span>
+          </div>
+          <div class="flex items-end gap-1 mb-1">
+            <div class="text-4xl font-extrabold text-white">৳399</div>
+          </div>
+          <div class="text-white/40 text-xs mb-4">৳133/মাস হিসেবে</div>
+          <div class="grad-divider mb-5"></div>
+          <ul class="space-y-2.5 mb-6 flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-cyan-400 font-bold mt-0.5">✓</span> AI ভয়েস টিউটর — ১,০০০ মিনিট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-cyan-400 font-bold mt-0.5">✓</span> ছবি তুলে সমাধান</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-cyan-400 font-bold mt-0.5">✓</span> স্টাডি গ্রুপ চ্যাট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-cyan-400 font-bold mt-0.5">✓</span> টিচার ব্রডকাস্ট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-cyan-400 font-bold mt-0.5">✓</span> পার্সোনালাইজড রোডম্যাপ</li>
+          </ul>
+          <button class="w-full py-3 rounded-xl font-semibold text-xs text-white/70 border border-white/10 hover:border-cyan-400/30 hover:text-cyan-300 transition-all">
+            শুরু করো →
+          </button>
+        </div>
+
+        <!-- 6 Months -->
+        <div class="glass-card p-6 pricing-card flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-xs font-bold text-white/50 uppercase tracking-widest">৬ মাস</div>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(139,92,246,0.2);color:#A78BFA">২২% ছাড়</span>
+          </div>
+          <div class="flex items-end gap-1 mb-1">
+            <div class="text-4xl font-extrabold text-white">৳699</div>
+          </div>
+          <div class="text-white/40 text-xs mb-4">৳117/মাস হিসেবে</div>
+          <div class="grad-divider mb-5"></div>
+          <ul class="space-y-2.5 mb-6 flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> AI ভয়েস টিউটর — ৫,০০০ মিনিট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> ছবি তুলে সমাধান</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> স্টাডি গ্রুপ চ্যাট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> Offline সেভ কনটেন্ট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> প্রতিদিনের প্রগ্রেস রিপোর্ট</li>
+          </ul>
+          <button class="w-full py-3 rounded-xl font-semibold text-xs text-white/70 border border-white/10 hover:border-violet-400/30 hover:text-violet-300 transition-all">
+            শুরু করো →
+          </button>
+        </div>
+
+        <!-- 12 Months - Best Value -->
+        <div class="pricing-card pricing-best flex flex-col relative p-6" style="background:rgba(255,255,255,0.05);backdrop-filter:blur(24px);border-radius:20px;border:1.5px solid rgba(34,211,238,0.5);box-shadow:0 0 40px rgba(34,211,238,0.15),0 0 80px rgba(139,92,246,0.08),inset 0 1px 0 rgba(255,255,255,0.08);">
+          <div class="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold text-white" style="background:linear-gradient(135deg,#22D3EE,#8B5CF6);box-shadow:0 0 20px rgba(34,211,238,0.5)">🏆 সেরা অফার</div>
+          <div class="flex items-center justify-between mb-3 mt-2">
+            <div class="text-xs font-bold text-cyan-400 uppercase tracking-widest">১২ মাস</div>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(34,211,238,0.2);color:#22D3EE">৩৩% ছাড়</span>
+          </div>
+          <div class="flex items-end gap-1 mb-1">
+            <div class="text-4xl font-extrabold grad-text">৳1199</div>
+          </div>
+          <div class="text-white/40 text-xs mb-4">৳100/মাস হিসেবে</div>
+          <div class="grad-divider mb-5"></div>
+          <ul class="space-y-2.5 mb-6 flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/80"><span class="text-cyan-400 font-bold mt-0.5">✓</span> AI ভয়েস টিউটর — <strong>১০,০০০ মিনিট</strong></li>
+            <li class="flex items-start gap-2 text-xs text-white/80"><span class="text-cyan-400 font-bold mt-0.5">✓</span> ছবি তুলে সমাধান</li>
+            <li class="flex items-start gap-2 text-xs text-white/80"><span class="text-cyan-400 font-bold mt-0.5">✓</span> স্টাডি গ্রুপ চ্যাট</li>
+            <li class="flex items-start gap-2 text-xs text-white/80"><span class="text-cyan-400 font-bold mt-0.5">✓</span> টিচার ব্রডকাস্ট</li>
+            <li class="flex items-start gap-2 text-xs text-white/80"><span class="text-cyan-400 font-bold mt-0.5">✓</span> সব প্রিমিয়াম ফিচার + অগ্রাধিকার সাপোর্ট</li>
+          </ul>
+          <button class="neu-btn w-full py-3 rounded-xl font-semibold text-xs text-cyan-400 glow-cyan">
+            এখনই নাও →
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TEACHER PLANS -->
+    <div id="teacher-plans" class="pricing-plans hidden">
+      <div class="text-center mb-8">
+        <p class="text-white/50 text-sm">অডিও কল · স্টুডেন্ট গ্রুপ ম্যানেজমেন্ট · AI লেসন প্ল্যানার · ভেরিফাইড ব্যাজ</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+
+        <!-- 1 Month -->
+        <div class="glass-card p-6 pricing-card flex flex-col">
+          <div class="text-xs font-bold text-white/50 uppercase tracking-widest mb-3">১ মাস</div>
+          <div class="flex items-end gap-1 mb-1">
+            <div class="text-4xl font-extrabold text-white">৳249</div>
+          </div>
+          <div class="text-white/40 text-xs mb-4">প্রফেশনাল শুরু</div>
+          <div class="grad-divider mb-5"></div>
+          <ul class="space-y-2.5 mb-6 flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> শিক্ষকদের সাথে অডিও কল</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> স্টুডেন্ট গ্রুপ ম্যানেজমেন্ট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> AI লেসন প্ল্যানার</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> ভেরিফাইড ব্যাজ 🏅</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> ব্রডকাস্ট মেসেজ</li>
+          </ul>
+          <button class="w-full py-3 rounded-xl font-semibold text-xs text-white/70 border border-white/10 hover:border-violet-400/30 hover:text-violet-300 transition-all">
+            শুরু করো →
+          </button>
+        </div>
+
+        <!-- 3 Months -->
+        <div class="glass-card p-6 pricing-card flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-xs font-bold text-white/50 uppercase tracking-widest">৩ মাস</div>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(34,211,238,0.15);color:#22D3EE">১২% ছাড়</span>
+          </div>
+          <div class="flex items-end gap-1 mb-1">
+            <div class="text-4xl font-extrabold text-white">৳659</div>
+          </div>
+          <div class="text-white/40 text-xs mb-4">৳220/মাস হিসেবে</div>
+          <div class="grad-divider mb-5"></div>
+          <ul class="space-y-2.5 mb-6 flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> শিক্ষকদের সাথে অডিও কল</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> ৫০ জন পর্যন্ত স্টুডেন্ট ম্যানেজ</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> AI লেসন প্ল্যানার + রিপোর্ট</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> ভেরিফাইড ব্যাজ 🏅</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> কনটেন্ট শেয়ারিং টুলস</li>
+          </ul>
+          <button class="w-full py-3 rounded-xl font-semibold text-xs text-white/70 border border-white/10 hover:border-violet-400/30 hover:text-violet-300 transition-all">
+            শুরু করো →
+          </button>
+        </div>
+
+        <!-- 6 Months -->
+        <div class="glass-card p-6 pricing-card flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-xs font-bold text-white/50 uppercase tracking-widest">৬ মাস</div>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(139,92,246,0.2);color:#A78BFA">২৬% ছাড়</span>
+          </div>
+          <div class="flex items-end gap-1 mb-1">
+            <div class="text-4xl font-extrabold text-white">৳1099</div>
+          </div>
+          <div class="text-white/40 text-xs mb-4">৳183/মাস হিসেবে</div>
+          <div class="grad-divider mb-5"></div>
+          <ul class="space-y-2.5 mb-6 flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> শিক্ষকদের সাথে HD অডিও কল</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> ১৫০ জন পর্যন্ত স্টুডেন্ট ম্যানেজ</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> AI কুইজ জেনারেটর</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> ভেরিফাইড ব্যাজ + প্রোফাইল বুস্ট 🏅</li>
+            <li class="flex items-start gap-2 text-xs text-white/70"><span class="text-violet-400 font-bold mt-0.5">✓</span> Analytics ড্যাশবোর্ড</li>
+          </ul>
+          <button class="w-full py-3 rounded-xl font-semibold text-xs text-white/70 border border-white/10 hover:border-violet-400/30 hover:text-violet-300 transition-all">
+            শুরু করো →
+          </button>
+        </div>
+
+        <!-- 12 Months - Elite -->
+        <div class="pricing-card flex flex-col relative p-6" style="background:rgba(255,255,255,0.05);backdrop-filter:blur(24px);border-radius:20px;border:1.5px solid rgba(139,92,246,0.6);box-shadow:0 0 40px rgba(139,92,246,0.2),0 0 80px rgba(34,211,238,0.06),inset 0 1px 0 rgba(255,255,255,0.08);">
+          <div class="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold text-white" style="background:linear-gradient(135deg,#8B5CF6,#22D3EE);box-shadow:0 0 20px rgba(139,92,246,0.5)">👑 এলিট চয়েস</div>
+          <div class="flex items-center justify-between mb-3 mt-2">
+            <div class="text-xs font-bold text-violet-400 uppercase tracking-widest">১২ মাস</div>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(139,92,246,0.2);color:#A78BFA">৩৭% ছাড়</span>
+          </div>
+          <div class="flex items-end gap-1 mb-1">
+            <div class="text-4xl font-extrabold" style="background:linear-gradient(135deg,#A78BFA,#22D3EE);-webkit-background-clip:text;-webkit-text-fill-color:transparent">৳1899</div>
+          </div>
+          <div class="text-white/40 text-xs mb-4">৳158/মাস হিসেবে</div>
+          <div class="grad-divider mb-5"></div>
+          <ul class="space-y-2.5 mb-6 flex-1">
+            <li class="flex items-start gap-2 text-xs text-white/80"><span class="text-violet-400 font-bold mt-0.5">✓</span> সীমাহীন অডিও কল + HD ভিডিও</li>
+            <li class="flex items-start gap-2 text-xs text-white/80"><span class="text-violet-400 font-bold mt-0.5">✓</span> <strong>আনলিমিটেড</strong> স্টুডেন্ট ম্যানেজ</li>
+            <li class="flex items-start gap-2 text-xs text-white/80"><span class="text-violet-400 font-bold mt-0.5">✓</span> সম্পূর্ণ AI টিচিং স্যুট</li>
+            <li class="flex items-start gap-2 text-xs text-white/80"><span class="text-violet-400 font-bold mt-0.5">✓</span> প্রিমিয়াম ভেরিফাইড ব্যাজ 🏅✨</li>
+            <li class="flex items-start gap-2 text-xs text-white/80"><span class="text-violet-400 font-bold mt-0.5">✓</span> ডেডিকেটেড সাপোর্ট + অ্যাকাউন্ট ম্যানেজার</li>
+          </ul>
+          <button class="w-full py-3 rounded-xl font-semibold text-xs text-violet-300 neu-btn" style="border-color:rgba(139,92,246,0.5);box-shadow:0 0 20px rgba(139,92,246,0.3)">
+            এখনই নাও →
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="text-center">
+      <p class="text-white/40 text-sm mb-5">নিরাপদ পেমেন্ট — সরাসরি বাংলাদেশি পদ্ধতিতে</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <div class="glass rounded-xl px-5 py-3 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center font-extrabold text-sm" style="background:#E2136E;color:white;letter-spacing:-0.5px">bK</div>
+          <div><div class="text-sm font-semibold">bKash</div><div class="text-xs text-white/40">Mobile Banking</div></div>
+        </div>
+        <div class="glass rounded-xl px-5 py-3 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center font-extrabold text-sm" style="background:linear-gradient(135deg,#F37920,#E84B0F);color:white">N</div>
+          <div><div class="text-sm font-semibold">Nagad</div><div class="text-xs text-white/40">Mobile Banking</div></div>
+        </div>
+        <div class="glass rounded-xl px-5 py-3 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm" style="background:linear-gradient(135deg,#6A0DAD,#8B008B);color:white">R</div>
+          <div><div class="text-sm font-semibold">Rocket</div><div class="text-xs text-white/40">DBBL Mobile</div></div>
+        </div>
+        <div class="glass rounded-xl px-5 py-3 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg flex items-center justify-center text-base" style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2)">💳</div>
+          <div><div class="text-sm font-semibold">Card</div><div class="text-xs text-white/40">Visa, Mastercard</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE: FAQ
+═══════════════════════════════════════════════ -->
+<section id="page-faq" class="page-section">
+  <div class="pt-28 pb-24 px-6 max-w-4xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="badge mx-auto mb-4">Help Center</div>
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-6">Frequently Asked <span class="grad-text">Questions</span></h1>
+      <p class="text-white/50">Got a question? We've got answers. If you can't find what you're looking for, <button onclick="showPage('contact')" class="text-cyan-400 hover:underline">contact us</button>.</p>
+    </div>
+
+    <!-- Category: AI Accuracy -->
+    <div class="mb-10">
+      <h2 class="text-lg font-bold text-cyan-400 mb-4 flex items-center gap-2">
+        <span class="w-6 h-6 rounded-lg flex items-center justify-center text-xs" style="background:rgba(34,211,238,0.15)">🤖</span>
+        AI Accuracy & Learning
+      </h2>
+      <div class="space-y-3" id="faq-ai">
+        <div class="faq-item glass-card overflow-hidden" onclick="toggleFaq(this)">
+          <button class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-medium text-sm">How accurate is Progga AI's answers?</span>
+            <span class="faq-icon text-cyan-400 text-xl font-thin ml-4 flex-shrink-0">+</span>
+          </button>
+          <div class="faq-answer px-5 pb-5 text-white/55 text-sm leading-relaxed">
+            Progga AI is trained on verified educational content aligned with the Bangladesh National Curriculum. For Physics, Math, and English, accuracy rates exceed 95% for standard SSC and HSC level questions. We continuously update the model to improve precision. Always cross-check important exam answers with your textbook.
+          </div>
+        </div>
+        <div class="faq-item glass-card overflow-hidden" onclick="toggleFaq(this)">
+          <button class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-medium text-sm">Does Progga AI understand Bengali language questions?</span>
+            <span class="faq-icon text-cyan-400 text-xl font-thin ml-4 flex-shrink-0">+</span>
+          </button>
+          <div class="faq-answer px-5 pb-5 text-white/55 text-sm leading-relaxed">
+            Yes! Progga AI is built with Bengali-first design. You can type or speak questions in Bengali, Banglish (Bengali written in English letters), or pure English — and it will understand and respond appropriately.
+          </div>
+        </div>
+        <div class="faq-item glass-card overflow-hidden" onclick="toggleFaq(this)">
+          <button class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-medium text-sm">Can Progga AI solve any math problem?</span>
+            <span class="faq-icon text-cyan-400 text-xl font-thin ml-4 flex-shrink-0">+</span>
+          </button>
+          <div class="faq-answer px-5 pb-5 text-white/55 text-sm leading-relaxed">
+            Progga AI handles the full SSC and HSC Math syllabus including Algebra, Geometry, Trigonometry, Statistics, and basic Calculus. It shows step-by-step working for every problem so you learn the process, not just the answer.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category: Subscription -->
+    <div class="mb-10">
+      <h2 class="text-lg font-bold text-violet-400 mb-4 flex items-center gap-2">
+        <span class="w-6 h-6 rounded-lg flex items-center justify-center text-xs" style="background:rgba(139,92,246,0.15)">💳</span>
+        Subscription & Payment
+      </h2>
+      <div class="space-y-3">
+        <div class="faq-item glass-card overflow-hidden" onclick="toggleFaq(this)">
+          <button class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-medium text-sm">How do I pay for Progga Pro via bKash?</span>
+            <span class="faq-icon text-cyan-400 text-xl font-thin ml-4 flex-shrink-0">+</span>
+          </button>
+          <div class="faq-answer px-5 pb-5 text-white/55 text-sm leading-relaxed">
+            Open the app → Go to Settings → Subscription → Select Progga Pro → Choose bKash as payment method → Enter your bKash number → Confirm with your bKash PIN. Your Pro access activates instantly upon successful payment.
+          </div>
+        </div>
+        <div class="faq-item glass-card overflow-hidden" onclick="toggleFaq(this)">
+          <button class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-medium text-sm">Can I cancel my subscription anytime?</span>
+            <span class="faq-icon text-cyan-400 text-xl font-thin ml-4 flex-shrink-0">+</span>
+          </button>
+          <div class="faq-answer px-5 pb-5 text-white/55 text-sm leading-relaxed">
+            Absolutely. You can cancel your Progga Pro subscription at any time from within the app. You'll continue to have Pro access until the end of your current billing period, after which you'll revert to the free plan with no further charges.
+          </div>
+        </div>
+        <div class="faq-item glass-card overflow-hidden" onclick="toggleFaq(this)">
+          <button class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-medium text-sm">Is there a family or group plan for students?</span>
+            <span class="faq-icon text-cyan-400 text-xl font-thin ml-4 flex-shrink-0">+</span>
+          </button>
+          <div class="faq-answer px-5 pb-5 text-white/55 text-sm leading-relaxed">
+            We're currently working on a School & Institution plan that will offer bulk pricing for classrooms and coaching centres. Contact us at support if you're interested in early access for your institution.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category: Account Recovery -->
+    <div class="mb-10">
+      <h2 class="text-lg font-bold text-emerald-400 mb-4 flex items-center gap-2">
+        <span class="w-6 h-6 rounded-lg flex items-center justify-center text-xs" style="background:rgba(16,185,129,0.15)">🔐</span>
+        Account & Security
+      </h2>
+      <div class="space-y-3">
+        <div class="faq-item glass-card overflow-hidden" onclick="toggleFaq(this)">
+          <button class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-medium text-sm">I lost access to my phone number. How do I recover my account?</span>
+            <span class="faq-icon text-cyan-400 text-xl font-thin ml-4 flex-shrink-0">+</span>
+          </button>
+          <div class="faq-answer px-5 pb-5 text-white/55 text-sm leading-relaxed">
+            Contact our support team via email with your registered phone number and account details. After identity verification, we can help transfer your account to a new number. This process typically takes 24–48 hours for security reasons.
+          </div>
+        </div>
+        <div class="faq-item glass-card overflow-hidden" onclick="toggleFaq(this)">
+          <button class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-medium text-sm">Is my chat history with the AI private?</span>
+            <span class="faq-icon text-cyan-400 text-xl font-thin ml-4 flex-shrink-0">+</span>
+          </button>
+          <div class="faq-answer px-5 pb-5 text-white/55 text-sm leading-relaxed">
+            Yes. Your conversations with Progga AI are encrypted and associated only with your secure account. We do not share, sell, or publicly display your chat history. Your learning journey is yours alone.
+          </div>
+        </div>
+        <div class="faq-item glass-card overflow-hidden" onclick="toggleFaq(this)">
+          <button class="w-full flex items-center justify-between p-5 text-left">
+            <span class="font-medium text-sm">Can I use Progga AI on multiple devices?</span>
+            <span class="faq-icon text-cyan-400 text-xl font-thin ml-4 flex-shrink-0">+</span>
+          </button>
+          <div class="faq-answer px-5 pb-5 text-white/55 text-sm leading-relaxed">
+            You can log into your Progga AI account on any Android device. Your progress, roadmap, and history sync automatically via the cloud. Currently, we support Android only — iOS support is coming soon!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE: CONTACT
+═══════════════════════════════════════════════ -->
+<section id="page-contact" class="page-section">
+  <div class="pt-28 pb-24 px-6 max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="badge mx-auto mb-4">Get In Touch</div>
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-6">Let's <span class="grad-text">Connect</span></h1>
+      <p class="text-white/50 text-lg">Have a question, a bug to report, or a partnership idea? We'd love to hear from you.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-12 items-start">
+      <!-- Contact form -->
+      <div class="glass-card p-8">
+        <h2 class="text-xl font-bold mb-6">Send a Message</h2>
+        <form class="space-y-5" onsubmit="handleContact(event)">
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div class="input-group">
+              <input type="text" placeholder=" " id="contact-name"/>
+              <label>Your Name</label>
+            </div>
+            <div class="input-group">
+              <input type="email" placeholder=" " id="contact-email"/>
+              <label>Email Address</label>
+            </div>
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder=" " id="contact-subject"/>
+            <label>Subject</label>
+          </div>
+          <div class="input-group">
+            <textarea rows="5" placeholder=" " id="contact-message" style="resize:none"></textarea>
+            <label>Your Message</label>
+          </div>
+          <button type="submit" class="neu-btn w-full py-4 rounded-2xl font-semibold text-cyan-400 glow-cyan flex items-center justify-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+            Send Message
+          </button>
+        </form>
+        <div id="contact-success" class="hidden mt-4 p-4 rounded-xl text-sm text-center font-medium" style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2);color:#22D3EE">
+          ✅ Message sent! We'll get back to you within 24 hours.
+        </div>
+      </div>
+
+      <!-- Contact info -->
+      <div class="space-y-6">
+        <div class="glass-card p-6 flex gap-5 items-start">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="font-semibold mb-1">Email Support</div>
+            <div class="text-white/55 text-sm">support@proggaai.com</div>
+            <div class="text-white/35 text-xs mt-1">Response within 24 hours</div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 flex gap-5 items-start">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.1A16 16 0 0015.9 17.09l.46-.46a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="font-semibold mb-1">Phone & WhatsApp</div>
+            <div class="text-white/55 text-sm">+880 1XXX-XXXXXX</div>
+            <div class="text-white/35 text-xs mt-1">Available 9AM – 9PM (BST)</div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 flex gap-5 items-start">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="font-semibold mb-1">Location</div>
+            <div class="text-white/55 text-sm">Bangladesh</div>
+            <div class="text-white/35 text-xs mt-1">Progga AI — Independent EdTech Brand</div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6">
+          <div class="font-semibold mb-4 text-sm">Follow Progga AI</div>
+          <div class="flex gap-3">
+            <a href="#" class="w-11 h-11 glass rounded-xl flex items-center justify-center hover:border-cyan-400/30 transition-all text-white/60 hover:text-cyan-400">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="#" class="w-11 h-11 glass rounded-xl flex items-center justify-center hover:border-cyan-400/30 transition-all text-white/60 hover:text-cyan-400">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+            </a>
+            <a href="#" class="w-11 h-11 glass rounded-xl flex items-center justify-center hover:border-cyan-400/30 transition-all text-white/60 hover:text-cyan-400">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>
+            </a>
+            <a href="#" class="w-11 h-11 glass rounded-xl flex items-center justify-center hover:border-cyan-400/30 transition-all text-white/60 hover:text-cyan-400">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
+<footer class="border-t border-white/5 mt-0" style="background:rgba(6,12,24,0.8)">
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="grid md:grid-cols-4 gap-10 mb-12">
+      <!-- Col 1: Brand -->
+      <div class="md:col-span-1">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#22D3EE,#8B5CF6)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <span class="font-extrabold text-lg"><span class="grad-text">Progga</span> AI</span>
+        </div>
+        <p class="text-white/40 text-sm leading-relaxed mb-4">Your intelligent learning companion. Empowering every student in Bangladesh with AI-powered education.</p>
+        <div class="badge text-xs">🇧🇩 Made in Bangladesh</div>
+      </div>
+
+      <!-- Col 2: Product -->
+      <div>
+        <h4 class="font-semibold text-white/80 mb-4 text-sm uppercase tracking-wider">Product</h4>
+        <ul class="space-y-2.5">
+          <li><button onclick="showPage('features')" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">AI Features</button></li>
+          <li><button onclick="showPage('pricing')" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">Pricing</button></li>
+          <li><button onclick="showPage('home')" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">How it Works</button></li>
+          <li><a href="#" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">Download App</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Company -->
+      <div>
+        <h4 class="font-semibold text-white/80 mb-4 text-sm uppercase tracking-wider">Company</h4>
+        <ul class="space-y-2.5">
+          <li><button onclick="showPage('about')" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">About</button></li>
+          <li><button onclick="showPage('contact')" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">Contact</button></li>
+          <li><a href="#" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">Blog</a></li>
+          <li><a href="#" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Support -->
+      <div>
+        <h4 class="font-semibold text-white/80 mb-4 text-sm uppercase tracking-wider">Support</h4>
+        <ul class="space-y-2.5">
+          <li><button onclick="showPage('faq')" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">FAQ</button></li>
+          <li><button onclick="showPage('contact')" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">Help Center</button></li>
+          <li><a href="mailto:support@proggaai.com" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">support@proggaai.com</a></li>
+          <li><a href="#" class="text-white/45 text-sm hover:text-cyan-400 transition-colors">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grad-divider mb-8"></div>
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-white/30 text-sm text-center md:text-left font-bengali">
+        © ২০২৬ প্রজ্ঞা এআই। বাংলাদেশের শিক্ষার ডিজিটাল রূপান্তর।
+      </p>
+      <p class="text-white/30 text-sm text-center font-bengali">
+        তৈরি করেছেন <span class="text-cyan-400 font-medium">হরিদাশ বাছাড়</span> <span class="text-red-400">❤️</span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════ -->
+<script>
+// ---- PAGE NAVIGATION ----
+function showPage(id) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('page-' + id);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+    setTimeout(() => initFadeUps(), 100);
+  }
+}
+
+// ---- NAVBAR SCROLL ----
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if(window.scrollY > 50) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+});
+
+// ---- HAMBURGER ----
+function toggleMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+// ---- PRICING TOGGLE ----
+function setPricingMode(mode) {
+  const studentPlans = document.getElementById('student-plans');
+  const teacherPlans = document.getElementById('teacher-plans');
+  const btnStudent = document.getElementById('toggle-student');
+  const btnTeacher = document.getElementById('toggle-teacher');
+  if (mode === 'student') {
+    studentPlans.classList.remove('hidden');
+    teacherPlans.classList.add('hidden');
+    btnStudent.classList.add('active-toggle');
+    btnTeacher.classList.remove('active-toggle');
+  } else {
+    teacherPlans.classList.remove('hidden');
+    studentPlans.classList.add('hidden');
+    btnTeacher.classList.add('active-toggle');
+    btnStudent.classList.remove('active-toggle');
+  }
+}
+
+function toggleFaq(item) {
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if(!wasOpen) item.classList.add('open');
+}
+
+// ---- CONTACT FORM ----
+function handleContact(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = '✓ Sent!';
+    document.getElementById('contact-success').classList.remove('hidden');
+    e.target.reset();
+    setTimeout(() => {
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg> Send Message';
+      btn.disabled = false;
+      document.getElementById('contact-success').classList.add('hidden');
+    }, 4000);
+  }, 1500);
+}
+
+// ---- FADE UP ON SCROLL ----
+function initFadeUps() {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, {threshold:0.1});
+  document.querySelectorAll('.fade-up').forEach(el => { el.classList.remove('visible'); obs.observe(el); });
+}
+initFadeUps();
+
+// ---- PARTICLES ----
+(function() {
+  const canvas = document.getElementById('particles-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [], mouse = {x:null, y:null};
+
+  function resize() {
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  canvas.parentElement.addEventListener('mousemove', e => {
+    const r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  });
+
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * w;
+      this.y = Math.random() * h;
+      this.vx = (Math.random() - 0.5) * 0.4;
+      this.vy = (Math.random() - 0.5) * 0.4;
+      this.r = Math.random() * 1.5 + 0.5;
+      this.alpha = Math.random() * 0.5 + 0.1;
+      this.color = Math.random() > 0.5 ? '34,211,238' : '139,92,246';
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      if(mouse.x) {
+        const dx = mouse.x - this.x, dy = mouse.y - this.y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist < 120) { this.x -= dx * 0.01; this.y -= dy * 0.01; }
+      }
+      if(this.x<0||this.x>w||this.y<0||this.y>h) this.reset();
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  for(let i=0; i<80; i++) particles.push(new Particle());
+
+  function drawConnections() {
+    for(let i=0;i<particles.length;i++) {
+      for(let j=i+1;j<particles.length;j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist < 100) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          const opacity = (1 - dist/100) * 0.15;
+          ctx.strokeStyle = `rgba(34,211,238,${opacity})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p => { p.update(); p.draw(); });
+    drawConnections();
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>
